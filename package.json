@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
+    "dev": "npm install --legacy-peer-deps && next dev --turbopack",
+    "build": "npm install --legacy-peer-deps && next build",
+    "start": "npm install --legacy-peer-deps && next start",
     "lint": "next lint",
     "postinstall": "npm install --legacy-peer-deps && prisma generate"
   },
@@ -46,9 +46,9 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@eslint/eslintrc": "^3.0.0",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9",
+    "eslint": "^9.0.0",
     "eslint-config-next": "15.1.7",
     "postcss": "^8.5.6",
     "prisma": "^6.15.0",
