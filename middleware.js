@@ -1,38 +1,44 @@
-import { NextResponse } from "next/server";
-import { createMiddleware, detectBot, shield } from "@arcjet/next";
+import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-// Match protected routes
 const isProtectedRoute = createRouteMatcher([
   "/admin(.*)",
   "/saved-cars(.*)",
   "/reservations(.*)",
 ]);
 
-// Arcjet middleware (rules only)
-const arcjet = createMiddleware(
-  shield({ mode: "LIVE" }),
-  detectBot({
-    mode: "LIVE",
-    allow: ["CATEGORY:SEARCH_ENGINE"],
-  })
-);
+// Create Arcjet middleware
+const aj = arcjet({
+  key: process.env.ARCJET_KEY,
+  rules: [
+    shield({
+      mode: "LIVE",
+    }),
+    detectBot({
+      mode: "LIVE",
+      allow: [
+        "CATEGORY:SEARCH_ENGINE", 
+      ],
+    }),
+  ],
+});
 
-// Clerk middleware with auth check
+// Create base Clerk middleware
 const clerk = clerkMiddleware(async (auth, req) => {
-  const authResult = await auth();
-  if (!authResult.userId && isProtectedRoute(req)) {
-    const redirect = await authResult.redirectToSignIn();
-    return redirect;
+  const { userId } = await auth();
+
+  if (!userId && isProtectedRoute(req)) {
+    const { redirectToSignIn } = await auth();
+    return redirectToSignIn();
   }
 
   return NextResponse.next();
 });
 
-// Compose middleware
-export default createMiddleware(arcjet, clerk);
+// Chain middlewares - ArcJet runs first, then Clerk
+export default createMiddleware(aj, clerk);
 
-// Apply to relevant paths only
 export const config = {
   matcher: [
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
