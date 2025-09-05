@@ -4,7 +4,6 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase)
 ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript)
 ![Clerk](https://img.shields.io/badge/Clerk-Auth-8A2BE2?style=for-the-badge)
 ![Gemini AI](https://img.shields.io/badge/Gemini-AI-FF6B00?style=for-the-badge)
 
@@ -13,6 +12,14 @@ A modern, full-stack SaaS platform revolutionizing car buying with AI-powered im
 ## 🚀 Project Purpose
 
 Carvix aims to build a modern, full-stack SaaS platform for car buyers and dealerships that leverages cutting-edge AI technologies, secure and scalable architecture, and an intuitive user interface. The platform enhances the car buying experience by enabling AI-powered image search, detailed car information extraction, real-time test drive booking, and comprehensive admin management — all wrapped in a highly secure and scalable solution.
+
+## Features of Carvix
+
+- The platform includes an AI car search feature that allows users to upload images of cars to find similar vehicles available in the marketplace.
+- Advanced filtering options are available by make, model, price range, and detailed car specifications are provided on individual car pages.
+- Additional functionalities include high-quality image galleries and an interactive EMI calculator to assist buyers in making informed financial decisions.
+- Users can book test drives with real-time availability slots from dealerships, along with automated confirmations to streamline the process.
+- The admin dashboard features powerful analytics, full car inventory management, user test drive management, and an AI-powered car detail extractor that minimizes manual data entry by automatically populating car details from uploaded images.
 
 ## 🛠️ Tech Stack
 
@@ -32,7 +39,7 @@ Carvix aims to build a modern, full-stack SaaS platform for car buyers and deale
 - **Clerk Authentication** - User authentication and management
 - **Arcjet** - Bot protection and rate limiting
 
-## ✨ Key Features
+## ✨ Detailed Key Features
 
 ### 🤖 AI Car Search
 - Upload car images to find visually similar cars in the inventory
@@ -151,15 +158,26 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```
 carvix/
-├── components/          # Reusable UI components
-├── lib/                # Utility libraries and configurations
-├── app/                # Next.js app router pages
-│   ├── admin/          # Admin dashboard pages
-│   ├── api/            # API routes
-│   ├── cars/           # Car-related pages
-│   └── globals.css     # Global styles
-├── prisma/             # Database schema and migrations
-└── public/             # Static assets
+├── actions/                 # Server actions
+├── app/                    # Next.js app router pages
+├── components/             # Reusable UI components
+├── hooks/                  # Custom React hooks
+├── lib/                    # Utility libraries and configurations
+├── prisma/                 # Database schema and migrations
+├── public/                 # Static assets
+├── .gitattributes          # Git attributes configuration
+├── .gitignore             # Git ignore rules
+├── README.md              # Project documentation
+├── components.json        # UI components configuration
+├── eslint.config.mjs      # ESLint configuration
+├── jsconfig.json          # JavaScript configuration
+├── middleware.js          # Next.js middleware
+├── next.config.mjs        # Next.js configuration
+├── package-lock.json      # NPM package lock
+├── package.json           # Project dependencies and scripts
+├── postcss.config.js      # PostCSS configuration
+├── postcss.config.mjs     # PostCSS configuration (ES modules)
+└── tailwind.config.mjs    # Tailwind CSS configuration
 ```
 
 ## 🔧 Scripts
