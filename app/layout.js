@@ -23,27 +23,24 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">{children}</main>
           <Toaster richColors />
 
-          <footer className="bg-gray-900 text-gray-300 py-16">
-  <div className="container mx-auto px-4 text-center md:text-left">
-    {/* Logo & Description */}
-    <div className="mb-8 md:mb-0">
-      <img
-        src="/logo.png"
-        alt="Carvix AI Logo"
-        className="h-10 mb-4 mx-auto md:mx-0"
-      />
-      <p className="text-gray-400 leading-relaxed max-w-xl mx-auto md:mx-0">
-        Carvix AI is a modern, full-stack SaaS platform revolutionizing car buying with AI-powered image search, automated data extraction, and seamless test drive booking. 
-        Our platform enhances the car buying experience by providing detailed car insights, real-time availability, and a secure, user-friendly interface.
+        <footer className="bg-gray-50 border-t border-gray-200 py-12">
+  <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+    {/* Branding / Description */}
+    <div className="text-center md:text-left max-w-md">
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">Carvix AI</h3>
+      <p className="text-gray-600 text-sm leading-relaxed">
+        Revolutionizing the car buying experience with AI-powered search, automated data extraction, and seamless test drive booking.
       </p>
     </div>
 
-    {/* Bottom copyright */}
-    <div className="border-t border-gray-800 mt-12 pt-6 text-gray-500 text-sm">
-      © {new Date().getFullYear()} Carvix AI. All rights reserved.
+    {/* Legal / Copyright */}
+    <div className="text-center md:text-right text-gray-500 text-sm">
+      <p>© {new Date().getFullYear()} Carvix AI. All rights reserved.</p>
+      <p className="mt-1">Built for modern car buyers and dealerships.</p>
     </div>
   </div>
 </footer>
+
 
         </body>
       </html>
