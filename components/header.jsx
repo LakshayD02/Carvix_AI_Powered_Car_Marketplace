@@ -67,19 +67,18 @@ const Header = async ({ isAdminPage = false }) => {
             </SignedIn>
           )}
 
-          <SignedOut>
+           <SignedOut>
           {!isAdminPage && (
             <div className="flex items-center space-x-2">
               <Link href="/sign-up">
                 <Button variant="default">Sign Up</Button>
               </Link>
-                 <Link href="/cars">
-                  <Button variant="outline">View Cars</Button>
-                </Link>
+              <SignInButton forceRedirectUrl="/">
+                <Button variant="outline">Login</Button>
+              </SignInButton>
             </div>
           )}
         </SignedOut>
-
 
           <SignedIn>
             <UserButton
