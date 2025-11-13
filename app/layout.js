@@ -22,42 +22,30 @@ export default function RootLayout({ children }) {
           <Header />
           <main className="min-h-screen">{children}</main>
           <Toaster richColors />
-
-            <footer className="bg-blue-50 border-t border-gray-200">
-            <div className="container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between">
-              {/* Logo and Tagline */}
-              <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
-                <div className="flex items-center space-x-2">
-                  <img src="/logo-white.png" alt="Carvix AI" className="h-10 w-auto" />
-                  <span className="text-xl font-semibold text-gray-800">Carvix AI</span>
-                </div>
-                <p className="mt-2 text-gray-500 max-w-xs text-center md:text-left">
-                  A modern AI-driven platform redefining car buying with smart search, seamless test drives, and trusted listings.
-                </p>
-              </div>
+  
+          <footer className="bg-blue-50 py-12">
+            <div className="container mx-auto px-4 flex flex-col items-center text-center">
+              {/* Logo */}
+              <Image
+                src="/logo.png"
+                alt="Carvix Logo"
+                width={150}
+                height={50}
+                className="mb-4 object-contain"
+              />
           
-              {/* Footer Info */}
-              <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-12 text-gray-600 text-sm text-center md:text-left">
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Company</h4>
-                  <p>About Us</p>
-                  <p>Careers</p>
-                  <p>Blog</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">Support</h4>
-                  <p>Contact</p>
-                  <p>Help Center</p>
-                  <p>Privacy Policy</p>
-                </div>
-              </div>
-            </div>
+              {/* Description */}
+              <p className="text-gray-600 max-w-md mb-4">
+                Carvix AI is a modern SaaS platform revolutionizing the car buying experience with AI-powered search, seamless test drive booking, and verified vehicle listings.
+              </p>
           
-            {/* Bottom Bar */}
-            <div className="border-t border-gray-200 mt-8 py-4 text-center text-gray-500 text-sm">
-              © {new Date().getFullYear()} Carvix AI. All rights reserved.
+              {/* Copyright */}
+              <p className="text-gray-400 text-sm">
+                © {new Date().getFullYear()} Carvix AI. All rights reserved.
+              </p>
             </div>
           </footer>
+
 
 
         </body>
