@@ -116,7 +116,7 @@ export function HomeSearch() {
           <Search className="absolute left-3 w-5 h-5" />
           <Input
             type="text"
-            placeholder="Enter make, model, or use our AI Image Search..."
+            placeholder="Enter details or use AI Image Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-12 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm"
