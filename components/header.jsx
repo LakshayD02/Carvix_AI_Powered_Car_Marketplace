@@ -73,9 +73,9 @@ const Header = async ({ isAdminPage = false }) => {
               <Link href="/sign-up">
                 <Button variant="default">Sign Up</Button>
               </Link>
-              <SignInButton forceRedirectUrl="/">
-                <Button variant="outline">Login</Button>
-              </SignInButton>
+                 <Link href="/cars">
+                  <Button variant="outline">View Cars</Button>
+                </Link>
             </div>
           )}
         </SignedOut>
