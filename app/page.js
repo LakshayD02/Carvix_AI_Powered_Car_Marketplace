@@ -141,7 +141,6 @@ export default async function Home() {
   </div>
 </section>
 
-
       {/* Browse by Body Type */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -181,22 +180,32 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* FAQ Section with Accordion */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Frequently Asked Questions
-          </h2>
-          <Accordion type="single" collapsible className="w-full">
-            {faqItems.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
+     {/* FAQ Section with Accordion */}
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">
+      Frequently Asked Questions
+    </h2>
+
+    <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto space-y-4">
+      {faqItems.map((faq, index) => (
+        <AccordionItem
+          key={index}
+          value={`item-${index}`}
+          className="bg-white rounded-2xl shadow-md overflow-hidden"
+        >
+          <AccordionTrigger className="px-6 py-4 text-left text-lg font-medium text-gray-900 hover:bg-gray-100 transition-colors duration-200">
+            {faq.question}
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-4 text-gray-600 leading-relaxed bg-gray-50">
+            {faq.answer}
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  </div>
+</section>
+
 
       {/* CTA Section */}
       <section className="py-16 dotted-background text-white">
