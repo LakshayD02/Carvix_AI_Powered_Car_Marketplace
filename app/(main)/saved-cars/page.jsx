@@ -1,3 +1,5 @@
+"use client";
+
 import { getSavedCars } from "@/actions/car-listing";
 import { SavedCarsList } from "./_components/saved-cars-list";
 import { auth } from "@clerk/nextjs/server";
