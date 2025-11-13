@@ -23,7 +23,7 @@ export default async function Home() {
 <section className="relative py-20 md:py-32 bg-gradient-to-b from-blue-50 via-white to-white">
   <div className="max-w-4xl mx-auto text-center px-4">
     <div className="mb-10">
-      <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500">
+      <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-orange-700">
         Unlock Your Dream Car with Carvix AI
       </h1>
       <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
@@ -42,6 +42,7 @@ export default async function Home() {
     </div>
   </div>
 </section>
+
 
       {/* Featured Cars */}
       <section className="py-12">
