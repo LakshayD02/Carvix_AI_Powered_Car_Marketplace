@@ -43,7 +43,6 @@ export default async function Home() {
   </div>
 </section>
 
-
       {/* Featured Cars */}
       <section className="py-12">
         <div className="container mx-auto px-4">
@@ -98,45 +97,50 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-12">
-            Why Choose Our Platform
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 text-blue-700 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Car className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Wide Selection</h3>
-              <p className="text-gray-600">
-                Thousands of verified vehicles from trusted dealerships and
-                private sellers.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-blue-100 text-blue-700 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Easy Test Drive</h3>
-              <p className="text-gray-600">
-                Book a test drive online in minutes, with flexible scheduling
-                options.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-blue-100 text-blue-700 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Secure Process</h3>
-              <p className="text-gray-600">
-                Verified listings and secure booking process for peace of mind.
-              </p>
-            </div>
-          </div>
+     {/* Why Choose Us */}
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16 text-gray-900">
+      Why Choose Carvix AI
+    </h2>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {/* Wide Selection */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+          <Car className="h-10 w-10" />
         </div>
-      </section>
+        <h3 className="text-xl font-semibold mb-3 text-gray-900">Wide Selection</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Access thousands of verified vehicles from trusted dealerships and private sellers, all in one platform.
+        </p>
+      </div>
+
+      {/* Easy Test Drive */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+          <Calendar className="h-10 w-10" />
+        </div>
+        <h3 className="text-xl font-semibold mb-3 text-gray-900">Easy Test Drive</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Book test drives online in minutes with flexible scheduling and real-time availability.
+        </p>
+      </div>
+
+      {/* Secure Process */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+          <Shield className="h-10 w-10" />
+        </div>
+        <h3 className="text-xl font-semibold mb-3 text-gray-900">Secure Process</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Verified listings and secure booking process ensure peace of mind for every transaction.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Browse by Body Type */}
       <section className="py-12 bg-gray-50">
@@ -177,45 +181,54 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* FAQ Section with Accordion */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Frequently Asked Questions
-          </h2>
-          <Accordion type="single" collapsible className="w-full">
-            {faqItems.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
+    {/* FAQ Section with Accordion */}
+<section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">
+      Frequently Asked Questions
+    </h2>
 
-      {/* CTA Section */}
-      <section className="py-16 dotted-background text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Find Your Dream Car?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who found their perfect
-            vehicle through our platform.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/cars">View All Cars</Link>
-            </Button>
-            <SignedOut>
-              <Button size="lg" asChild>
-                <Link href="/sign-up">Sign Up Now</Link>
-              </Button>
-            </SignedOut>
-          </div>
-        </div>
-      </section>
+    <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto space-y-4">
+      {faqItems.map((faq, index) => (
+        <AccordionItem
+          key={index}
+          value={`item-${index}`}
+          className="bg-white rounded-2xl shadow-md overflow-hidden"
+        >
+          <AccordionTrigger className="px-6 py-4 text-left text-lg font-medium text-gray-900 hover:bg-gray-100 transition-colors duration-200">
+            {faq.question}
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-4 text-gray-600 leading-relaxed bg-gray-50">
+            {faq.answer}
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  </div>
+</section>
+
+{/* CTA Section */}
+<section className="py-20 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+  <div className="container mx-auto px-4 text-center">
+    <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
+      Ready to Find Your Dream Car?
+    </h2>
+    <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+      Join thousands of satisfied customers who found their perfect vehicle through Carvix AI.
+    </p>
+    <div className="flex flex-col sm:flex-row justify-center gap-6">
+      <Button size="lg" variant="secondary" asChild>
+        <Link href="/cars">View All Cars</Link>
+      </Button>
+      <SignedOut>
+        <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+          <Link href="/sign-up">Sign Up Now</Link>
+        </Button>
+      </SignedOut>
+    </div>
+  </div>
+</section>
+
     </div>
   );
 }
