@@ -47,12 +47,11 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col pt-20">
-      {/* Hero Section */}
-{/* Hero Section */}
-<section className="relative py-20 md:py-32 bg-gradient-to-b from-blue-50 via-white to-gray-50">
+   {/* Hero Section */}
+<section className="relative py-20 md:py-32 bg-gradient-to-b from-white via-gray-50 to-white">
   <div className="max-w-4xl mx-auto text-center px-4">
     <div className="mb-10">
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 leading-tight">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 leading-tight">
         Unlock Your Dream Car with Carvix AI
       </h1>
       <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
@@ -65,12 +64,10 @@ export default async function Home() {
     </div>
 
     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none">
-      <div className="bg-dotted-pattern opacity-10"></div>
+      <div className="bg-dotted-pattern opacity-5"></div>
     </div>
   </div>
 </section>
-
-
 
       {/* Featured Cars */}
       <section className="py-12">
