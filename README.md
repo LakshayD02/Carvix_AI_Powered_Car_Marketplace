@@ -13,6 +13,8 @@ A modern, full-stack SaaS platform revolutionizing car buying with AI-powered im
 
 Carvix aims to build a modern, full-stack SaaS platform for car buyers and dealerships that leverages cutting-edge AI technologies, secure and scalable architecture, and an intuitive user interface. The platform enhances the car buying experience by enabling AI-powered image search, detailed car information extraction, real-time test drive booking, and comprehensive admin management — all wrapped in a highly secure and scalable solution.
 
+Deployed Link - https://carvix-ai-lakshay.vercel.app/
+
 ## Features of Carvix
 
 - The platform includes an AI car search feature that allows users to upload images of cars to find similar vehicles available in the marketplace.
