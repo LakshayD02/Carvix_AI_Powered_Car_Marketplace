@@ -1,3 +1,4 @@
+// app/page.js
 import { ChevronRight, Car, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,35 +15,59 @@ import Link from "next/link";
 import Image from "next/image";
 import { bodyTypes, carMakes, faqItems } from "@/lib/data";
 
+// ArcJet Middleware import
+import arcjet from "@arcjet/next";
+import { createMiddleware } from "@arcjet/next";
+import { NextResponse } from "next/server";
+
+// Initialize ArcJet
+const aj = arcjet({
+  key: process.env.ARCJET_KEY,
+  rules: [
+    {
+      type: "shield",
+      mode: "LIVE",
+    },
+    {
+      type: "detectBot",
+      mode: "LIVE",
+      allow: ["CATEGORY:SEARCH_ENGINE"],
+    },
+  ],
+});
+
+// ArcJet middleware for this route
+export const middleware = createMiddleware(aj);
+export const config = {
+  matcher: ["/"],
+};
+
 export default async function Home() {
   const featuredCars = await getFeaturedCars();
 
   return (
     <div className="flex flex-col pt-20">
-      {/* Hero Section with Gradient Title */}
-<section className="relative py-20 md:py-32 bg-gradient-to-b from-blue-50 via-white to-white">
-  <div className="max-w-4xl mx-auto text-center px-4">
-    <div className="mb-10">
-      <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-orange-700">
-        Unlock Your Dream Car with Carvix AI
-      </h1>
-      <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-        Thousands of vehicles, AI-powered search, and test drives at your fingertips.
-      </p>
-    </div>
+      {/* Hero Section */}
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-blue-50 via-white to-white">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <div className="mb-10">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-orange-700">
+              Unlock Your Dream Car with Carvix AI
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Thousands of vehicles, AI-powered search, and test drives at your fingertips.
+            </p>
+          </div>
 
-    {/* Search Component (Client) */}
-    <div className="relative z-10">
-      <HomeSearch className="shadow-lg rounded-xl" />
-    </div>
+          <div className="relative z-10">
+            <HomeSearch className="shadow-lg rounded-xl" />
+          </div>
 
-    {/* Optional decorative dots */}
-    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none">
-      <div className="bg-dotted-pattern opacity-10"></div>
-    </div>
-  </div>
-</section>
-
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none">
+            <div className="bg-dotted-pattern opacity-10"></div>
+          </div>
+        </div>
+      </section>
 
       {/* Featured Cars */}
       <section className="py-12">
@@ -83,9 +108,7 @@ export default async function Home() {
               >
                 <div className="h-16 w-auto mx-auto mb-2 relative">
                   <Image
-                    src={
-                      make.imageUrl || `/make/${make.name.toLowerCase()}.webp`
-                    }
+                    src={make.imageUrl || `/make/${make.name.toLowerCase()}.webp`}
                     alt={make.name}
                     fill
                     style={{ objectFit: "contain" }}
@@ -98,49 +121,49 @@ export default async function Home() {
         </div>
       </section>
 
-     {/* Why Choose Us */}
-<section className="py-20 bg-gray-50">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16 text-gray-900">
-      Why Choose Carvix AI
-    </h2>
+      {/* Why Choose Us */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16 text-gray-900">
+            Why Choose Carvix AI
+          </h2>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-      {/* Wide Selection */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
-        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-          <Car className="h-10 w-10" />
-        </div>
-        <h3 className="text-xl font-semibold mb-3 text-gray-900">Wide Selection</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Access thousands of verified vehicles from trusted dealerships and private sellers, all in one platform.
-        </p>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Wide Selection */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+              <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <Car className="h-10 w-10" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Wide Selection</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Access thousands of verified vehicles from trusted dealerships and private sellers, all in one platform.
+              </p>
+            </div>
 
-      {/* Easy Test Drive */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
-        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-          <Calendar className="h-10 w-10" />
-        </div>
-        <h3 className="text-xl font-semibold mb-3 text-gray-900">Easy Test Drive</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Book test drives online in minutes with flexible scheduling and real-time availability.
-        </p>
-      </div>
+            {/* Easy Test Drive */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+              <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <Calendar className="h-10 w-10" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Easy Test Drive</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Book test drives online in minutes with flexible scheduling and real-time availability.
+              </p>
+            </div>
 
-      {/* Secure Process */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
-        <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-          <Shield className="h-10 w-10" />
+            {/* Secure Process */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center">
+              <div className="bg-gradient-to-tr from-blue-400 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                <Shield className="h-10 w-10" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Secure Process</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Verified listings and secure booking process ensure peace of mind for every transaction.
+              </p>
+            </div>
+          </div>
         </div>
-        <h3 className="text-xl font-semibold mb-3 text-gray-900">Secure Process</h3>
-        <p className="text-gray-600 leading-relaxed">
-          Verified listings and secure booking process ensure peace of mind for every transaction.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Browse by Body Type */}
       <section className="py-12 bg-gray-50">
@@ -162,9 +185,7 @@ export default async function Home() {
               >
                 <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative">
                   <Image
-                    src={
-                      type.imageUrl || `/body/${type.name.toLowerCase()}.webp`
-                    }
+                    src={type.imageUrl || `/body/${type.name.toLowerCase()}.webp`}
                     alt={type.name}
                     fill
                     className="object-cover group-hover:scale-105 transition duration-300"
@@ -181,32 +202,31 @@ export default async function Home() {
         </div>
       </section>
 
-     {/* FAQ Section with Accordion */}
-<section className="py-20 bg-gray-50">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">
-      Frequently Asked Questions
-    </h2>
+      {/* FAQ Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-900">
+            Frequently Asked Questions
+          </h2>
 
-    <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto space-y-4">
-      {faqItems.map((faq, index) => (
-        <AccordionItem
-          key={index}
-          value={`item-${index}`}
-          className="bg-white rounded-2xl shadow-md overflow-hidden"
-        >
-          <AccordionTrigger className="px-6 py-4 text-left text-lg font-medium text-gray-900 hover:bg-gray-100 transition-colors duration-200">
-            {faq.question}
-          </AccordionTrigger>
-          <AccordionContent className="px-6 py-4 text-gray-600 leading-relaxed bg-gray-50">
-            {faq.answer}
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
-  </div>
-</section>
-
+          <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto space-y-4">
+            {faqItems.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="bg-white rounded-2xl shadow-md overflow-hidden"
+              >
+                <AccordionTrigger className="px-6 py-4 text-left text-lg font-medium text-gray-900 hover:bg-gray-100 transition-colors duration-200">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="px-6 py-4 text-gray-600 leading-relaxed bg-gray-50">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-16 dotted-background text-white">
