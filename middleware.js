@@ -1,4 +1,5 @@
-import { authMiddleware } from "@clerk/nextjs";
+// middleware.js — ArcJet ONLY
+
 import arcjet, { detectBot, shield } from "@arcjet/next";
 
 const aj = arcjet({
@@ -12,24 +13,10 @@ const aj = arcjet({
   ],
 });
 
-// Lightweight Clerk function
-const clerk = authMiddleware({
-  publicRoutes: [
-    "/",
-    "/login(.*)",
-    "/sign-in(.*)",
-    "/sign-up(.*)",
-    "/api/public(.*)",
-  ],
-});
-
+// ArcJet runs here
 export default async function middleware(req) {
-  // Run ArcJet first
-  const res = await aj(req);
-  if (res) return res;
-
-  // Then run Clerk
-  return clerk(req);
+  const result = await aj(req);
+  return result; // If ArcJet blocks, this returns a response
 }
 
 export const config = {
