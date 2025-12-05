@@ -1,42 +1,28 @@
 import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { authMiddleware } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher([
-  "/admin(.*)",
-  "/saved-cars(.*)",
-  "/reservations(.*)",
-]);
-
-// Create Arcjet middleware
 const aj = arcjet({
   key: process.env.ARCJET_KEY,
   rules: [
-    shield({
-      mode: "LIVE",
-    }),
+    shield({ mode: "LIVE" }),
     detectBot({
       mode: "LIVE",
-      allow: [
-        "CATEGORY:SEARCH_ENGINE", 
-      ],
+      allow: ["CATEGORY:SEARCH_ENGINE"],
     }),
   ],
 });
 
-// Create base Clerk middleware
-const clerk = clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-
-  if (!userId && isProtectedRoute(req)) {
-    const { redirectToSignIn } = await auth();
-    return redirectToSignIn();
-  }
-
-  return NextResponse.next();
+// Clerk lightweight auth middleware
+const clerk = authMiddleware({
+  publicRoutes: [
+    "/",
+    "/api/public(.*)",
+    "/login(.*)",
+    "/signup(.*)",
+  ],
 });
 
-// Chain middlewares - ArcJet runs first, then Clerk
 export default createMiddleware(aj, clerk);
 
 export const config = {
