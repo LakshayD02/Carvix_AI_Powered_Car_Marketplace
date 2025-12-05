@@ -1,6 +1,5 @@
-import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
 import { authMiddleware } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
 
 const aj = arcjet({
   key: process.env.ARCJET_KEY,
@@ -13,13 +12,14 @@ const aj = arcjet({
   ],
 });
 
-// Clerk lightweight auth middleware
+// Clerk lightweight middleware
 const clerk = authMiddleware({
   publicRoutes: [
     "/",
-    "/api/public(.*)",
     "/login(.*)",
-    "/signup(.*)",
+    "/sign-in(.*)",
+    "/sign-up(.*)",
+    "/api/public(.*)",
   ],
 });
 
@@ -27,7 +27,7 @@ export default createMiddleware(aj, clerk);
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    // Only run middleware where absolutely needed
+    "/((?!_next|static|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|css|js)).*)",
   ],
 };
