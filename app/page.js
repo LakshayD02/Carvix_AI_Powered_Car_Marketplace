@@ -48,25 +48,26 @@ export default async function Home() {
   return (
     <div className="flex flex-col pt-20">
 {/* Hero Section */}
-<section className="relative py-28 md:py-36 lg:py-44 bg-gray-50 overflow-hidden">
+<section className="relative py-20 md:py-32 bg-gradient-to-b from-blue-50 via-white to-gray-50 overflow-hidden">
+  {/* Dotted background */}
   <div className="absolute inset-0">
-    <div className="bg-gradient-to-br from-white via-gray-50 to-white w-full h-full"></div>
+    <div className="w-full h-full bg-[url('/dots-pattern.svg')] bg-repeat opacity-10"></div>
   </div>
-
-  <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
-    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 leading-tight">
-      Unlock Your Dream Car with Carvix AI
-    </h1>
-    <p className="text-lg md:text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
-      Thousands of vehicles, AI-powered search, and test drives at your fingertips.
-    </p>
+  <div className="relative max-w-4xl mx-auto text-center px-4 z-10">
+    <div className="mb-10">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 leading-tight">
+        Unlock Your Dream Car with Carvix AI
+      </h1>
+      <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+        Thousands of vehicles, AI-powered search, and test drives at your fingertips.
+      </p>
+    </div>
 
     <div className="relative z-10">
       <HomeSearch className="shadow-lg rounded-xl" />
     </div>
   </div>
 </section>
-
 
       {/* Featured Cars */}
       <section className="py-12">
