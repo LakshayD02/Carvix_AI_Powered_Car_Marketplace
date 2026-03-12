@@ -1,6 +1,5 @@
 "use server";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "@/lib/prisma";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
@@ -43,7 +42,7 @@ async function fileToBase64(file) {
 }
 
 /**
- * Process car image with Gemini AI
+ * Process car image with Z-AI GLM-4.5-Air model
  */
 export async function processImageSearch(file) {
   try {
@@ -73,24 +72,12 @@ export async function processImageSearch(file) {
     }
 
     // Check if API key is available
-    if (!process.env.GEMINI_API_KEY) {
-      throw new Error("Gemini API key is not configured");
+    if (!process.env.ZAI_API_KEY) {
+      throw new Error("Z-AI API key is not configured");
     }
-
-    // Initialize Gemini API
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Convert image file to base64
     const base64Image = await fileToBase64(file);
-
-    // Create image part for the model
-    const imagePart = {
-      inlineData: {
-        data: base64Image,
-        mimeType: file.type,
-      },
-    };
 
     // Define the prompt for car search extraction
     const prompt = `
@@ -111,15 +98,67 @@ export async function processImageSearch(file) {
       Only respond with the JSON object, nothing else.
     `;
 
-    // Get response from Gemini
-    const result = await model.generateContent([imagePart, prompt]);
-    const response = await result.response;
-    const text = response.text();
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
+    // Prepare the request payload for Z-AI API
+    const payload = {
+      model: "glm-4.5-air:free",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: prompt
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:${file.type};base64,${base64Image}`
+              }
+            }
+          ]
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 500,
+      response_format: { type: "json_object" }
+    };
+
+    // Make API request to Z-AI
+    const response = await fetch("https://api.z.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.ZAI_API_KEY}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Z-AI API error:", errorData);
+      throw new Error(`Z-AI API request failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    // Extract the JSON response from the AI
+    const content = result.choices[0]?.message?.content;
+    
+    if (!content) {
+      throw new Error("No content in AI response");
+    }
 
     // Parse the JSON response
     try {
-      const carDetails = JSON.parse(cleanedText);
+      const carDetails = JSON.parse(content);
+
+      // Validate the response structure
+      if (!carDetails.make && !carDetails.bodyType && !carDetails.color) {
+        return {
+          success: false,
+          error: "Could not identify car details from image"
+        };
+      }
 
       // Return success response with data
       return {
@@ -128,13 +167,14 @@ export async function processImageSearch(file) {
       };
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
-      console.log("Raw response:", text);
+      console.log("Raw response:", content);
       return {
         success: false,
         error: "Failed to parse AI response",
       };
     }
   } catch (error) {
+    console.error("AI Search error:", error);
     throw new Error("AI Search error:" + error.message);
   }
 }
