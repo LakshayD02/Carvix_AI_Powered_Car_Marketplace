@@ -70,10 +70,10 @@ export const CarFilterControls = ({
       {filterSections.map((section) => (
         <div key={section.id} className="space-y-3">
           <h4 className="text-sm font-medium flex justify-between">
-            <span>{section.title}</span>
+            <span className="text-foreground">{section.title}</span>
             {section.currentValue && (
               <button
-                className="text-xs text-gray-600 flex items-center"
+                className="text-xs text-muted-foreground hover:text-[#0EA5E9] flex items-center transition-colors"
                 onClick={() => onClearFilter(section.id)}
               >
                 <X className="mr-1 h-3 w-3" />
@@ -81,17 +81,17 @@ export const CarFilterControls = ({
               </button>
             )}
           </h4>
-          <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+          <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-1">
             {section.options.map((option) => (
               <Badge
                 key={option.value}
                 variant={
                   section.currentValue === option.value ? "default" : "outline"
                 }
-                className={`cursor-pointer px-3 py-1 ${
+                className={`cursor-pointer px-3 py-1 text-xs transition-colors ${
                   section.currentValue === option.value
-                    ? "bg-blue-100 hover:bg-blue-200 text-blue-900 border-blue-200"
-                    : "bg-white hover:bg-gray-100 text-gray-700"
+                    ? "bg-[#0EA5E9] text-white border-[#0EA5E9] font-medium"
+                    : "bg-background hover:bg-muted text-foreground border-border"
                 }`}
                 onClick={() => {
                   section.onChange(

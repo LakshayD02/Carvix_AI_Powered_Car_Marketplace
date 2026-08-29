@@ -1,8 +1,6 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import aj from "@/lib/arcjet";
-import { request } from "@arcjet/next";
 
 // Function to serialize car data
 function serializeCarData(car) {
@@ -34,11 +32,27 @@ export async function getFeaturedCars(limit = 3) {
   }
 }
 
-// Function to convert File to base64
+// MIME types supported by vision models on OpenRouter
+const SUPPORTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
+
+/**
+ * Converts a File to base64, normalizing unsupported formats (AVIF, TIFF, BMP, etc.)
+ * to JPEG via sharp so vision models always receive a supported image type.
+ * Returns { base64, mimeType }.
+ */
 async function fileToBase64(file) {
   const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  return buffer.toString("base64");
+  let buffer = Buffer.from(bytes);
+  let mimeType = file.type;
+
+  if (!SUPPORTED_IMAGE_TYPES.has(mimeType)) {
+    console.log(`Converting unsupported image type "${mimeType}" to JPEG`);
+    const sharp = (await import("sharp")).default;
+    buffer = await sharp(buffer).jpeg({ quality: 90 }).toBuffer();
+    mimeType = "image/jpeg";
+  }
+
+  return { base64: buffer.toString("base64"), mimeType };
 }
 
 /**
@@ -46,6 +60,9 @@ async function fileToBase64(file) {
  */
 export async function processImageSearch(file) {
   try {
+    const { request } = await import("@arcjet/next");
+    const aj = (await import("@/lib/arcjet")).default;
+
     // Get request data for ArcJet
     const req = await request();
 
@@ -76,8 +93,8 @@ export async function processImageSearch(file) {
       throw new Error("OpenRouter API key is not configured");
     }
 
-    // Convert image file to base64
-    const base64Image = await fileToBase64(file);
+    // Convert image file to base64 (normalizes unsupported types like AVIF → JPEG)
+    const { base64: base64Image, mimeType } = await fileToBase64(file);
 
     // Define the prompt for car search extraction
     const prompt = `
@@ -98,57 +115,79 @@ export async function processImageSearch(file) {
       Only respond with the JSON object, nothing else.
     `;
 
-    // Prepare the request payload for Z-AI API
-    const payload = {
-      model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: prompt
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:${file.type};base64,${base64Image}`
-              }
-            }
-          ]
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    };
+    // Free vision models to try in order (fallback chain)
+    const VISION_MODELS = [
+      "google/gemma-4-31b-it:free",
+      "google/gemma-4-26b-a4b-it:free",
+      "minimax/minimax-m3:free",
+      "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    ];
 
-    // Make API request to OpenRouter
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`
+    const messageContent = [
+      { type: "text", text: prompt },
+      {
+        type: "image_url",
+        image_url: { url: `data:${mimeType};base64,${base64Image}` },
       },
-      body: JSON.stringify(payload)
-    });
+    ];
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Z-AI API error:", errorData);
-      throw new Error(`Z-AI API request failed: ${response.status}`);
+    let result = null;
+    let lastError = null;
+
+    // Try each model in sequence; skip on 429 (rate limit) or 404 (no endpoint)
+    for (const model of VISION_MODELS) {
+      console.log(`Trying vision model: ${model}`);
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: messageContent }],
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.warn(`Model ${model} failed (${response.status}):`, errorText);
+        // On rate-limit or missing endpoint, try the next model
+        if (response.status === 429 || response.status === 404) {
+          lastError = `${model} failed with ${response.status}`;
+          continue;
+        }
+        // Any other error is fatal
+        throw new Error(`OpenRouter API request failed (${response.status}): ${errorText}`);
+      }
+
+      result = await response.json();
+
+      if (!result.choices || result.choices.length === 0) {
+        console.warn(`Model ${model} returned no choices:`, JSON.stringify(result));
+        lastError = result.error?.message || `${model} returned no choices`;
+        continue;
+      }
+
+      console.log(`Successfully used model: ${model}`);
+      break; // Got a valid response — stop trying
     }
 
-    const result = await response.json();
-    
+    if (!result || !result.choices || result.choices.length === 0) {
+      throw new Error(`All vision models failed. Last error: ${lastError}`);
+    }
+
     // Extract the JSON response from the AI
     let content = result.choices[0]?.message?.content;
-    
+
     if (!content) {
       throw new Error("No content in AI response");
     }
 
     // Clean up potential markdown formatting (```json ... ```)
-    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+    content = content.replace(/```json/g, "").replace(/```/g, "").trim();
 
     // Parse the JSON response
     try {
@@ -158,25 +197,19 @@ export async function processImageSearch(file) {
       if (!carDetails.make && !carDetails.bodyType && !carDetails.color) {
         return {
           success: false,
-          error: "Could not identify car details from image"
+          error: "Could not identify car details from image",
         };
       }
 
-      // Return success response with data
-      return {
-        success: true,
-        data: carDetails,
-      };
+      return { success: true, data: carDetails };
     } catch (parseError) {
       console.error("Failed to parse AI response:", parseError);
       console.log("Raw response:", content);
-      return {
-        success: false,
-        error: "Failed to parse AI response",
-      };
+      return { success: false, error: "Failed to parse AI response" };
     }
   } catch (error) {
     console.error("AI Search error:", error);
     throw new Error("AI Search error:" + error.message);
   }
 }
+

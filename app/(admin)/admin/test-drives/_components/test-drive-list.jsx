@@ -53,7 +53,8 @@ export const TestDrivesList = () => {
 
   // Initial fetch and refetch on search/filter changes
   useEffect(() => {
-    fetchTestDrives({ search, status: statusFilter });
+    const status = statusFilter === "ALL" ? "" : statusFilter;
+    fetchTestDrives({ search, status });
   }, [search, statusFilter]);
 
   // Handle errors
@@ -71,20 +72,22 @@ export const TestDrivesList = () => {
 
   // Handle successful operations
   useEffect(() => {
+    const status = statusFilter === "ALL" ? "" : statusFilter;
     if (updateResult?.success) {
       toast.success("Test drive status updated successfully");
-      fetchTestDrives({ search, status: statusFilter });
+      fetchTestDrives({ search, status });
     }
     if (cancelResult?.success) {
       toast.success("Test drive cancelled successfully");
-      fetchTestDrives({ search, status: statusFilter });
+      fetchTestDrives({ search, status });
     }
   }, [updateResult, cancelResult]);
 
   // Handle search submit
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    fetchTestDrives({ search, status: statusFilter });
+    const status = statusFilter === "ALL" ? "" : statusFilter;
+    fetchTestDrives({ search, status });
   };
 
   // Handle status update
@@ -114,7 +117,7 @@ export const TestDrivesList = () => {
               <SelectValue placeholder="All Statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem>All Statuses</SelectItem>
+              <SelectItem value="ALL">All Statuses</SelectItem>
               <SelectItem value="PENDING">Pending</SelectItem>
               <SelectItem value="CONFIRMED">Confirmed</SelectItem>
               <SelectItem value="COMPLETED">Completed</SelectItem>
@@ -170,10 +173,10 @@ export const TestDrivesList = () => {
           ) : testDrivesData?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
               <CalendarRange className="h-12 w-12 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-1">
+              <h3 className="text-lg font-medium text-foreground mb-1">
                 No test drives found
               </h3>
-              <p className="text-gray-500 mb-4">
+              <p className="text-muted-foreground mb-4">
                 {statusFilter || search
                   ? "No test drives match your search criteria"
                   : "There are no test drive bookings yet."}

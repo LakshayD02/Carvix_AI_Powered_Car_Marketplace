@@ -245,10 +245,10 @@ export const SettingsForm = () => {
                 {DAYS.map((day, index) => (
                   <div
                     key={day.value}
-                    className="grid grid-cols-12 gap-4 items-center py-3 px-4 rounded-lg hover:bg-slate-50"
+                    className="grid grid-cols-12 gap-4 items-center py-3 px-4 rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div className="col-span-3 md:col-span-2">
-                      <div className="font-medium">{day.label}</div>
+                      <div className="font-medium text-foreground">{day.label}</div>
                     </div>
 
                     <div className="col-span-9 md:col-span-2 flex items-center">
@@ -261,7 +261,7 @@ export const SettingsForm = () => {
                       />
                       <Label
                         htmlFor={`is-open-${day.value}`}
-                        className="ml-2 cursor-pointer"
+                        className="ml-2 cursor-pointer text-foreground"
                       >
                         {workingHours[index]?.isOpen ? "Open" : "Closed"}
                       </Label>
@@ -271,7 +271,7 @@ export const SettingsForm = () => {
                       <>
                         <div className="col-span-5 md:col-span-4">
                           <div className="flex items-center">
-                            <Clock className="h-4 w-4 text-gray-400 mr-2" />
+                            <Clock className="h-4 w-4 text-muted-foreground mr-2" />
                             <Input
                               type="time"
                               value={workingHours[index]?.openTime}
@@ -282,12 +282,12 @@ export const SettingsForm = () => {
                                   e.target.value
                                 )
                               }
-                              className="text-sm"
+                              className="text-sm bg-background border-border text-foreground"
                             />
                           </div>
                         </div>
 
-                        <div className="text-center col-span-1">to</div>
+                        <div className="text-center col-span-1 text-muted-foreground">to</div>
 
                         <div className="col-span-5 md:col-span-3">
                           <Input
@@ -300,14 +300,14 @@ export const SettingsForm = () => {
                                 e.target.value
                               )
                             }
-                            className="text-sm"
+                            className="text-sm bg-background border-border text-foreground"
                           />
                         </div>
                       </>
                     )}
 
                     {!workingHours[index]?.isOpen && (
-                      <div className="col-span-11 md:col-span-8 text-gray-500 italic text-sm">
+                      <div className="col-span-11 md:col-span-8 text-muted-foreground italic text-sm">
                         Closed all day
                       </div>
                     )}
@@ -344,11 +344,11 @@ export const SettingsForm = () => {
             </CardHeader>
             <CardContent>
               <div className="mb-6 relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search users..."
-                  className="pl-9 w-full"
+                  className="pl-9 w-full bg-background border-border text-foreground"
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
                 />
@@ -356,7 +356,7 @@ export const SettingsForm = () => {
 
               {fetchingUsers ? (
                 <div className="py-12 flex justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
               ) : usersData?.success && filteredUsers.length > 0 ? (
                 <div className="overflow-x-auto">
@@ -374,7 +374,7 @@ export const SettingsForm = () => {
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center overflow-hidden">
                                 {user.imageUrl ? (
                                   <img
                                     src={user.imageUrl}
@@ -382,19 +382,19 @@ export const SettingsForm = () => {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <Users className="h-4 w-4 text-gray-500" />
+                                  <Users className="h-4 w-4 text-muted-foreground" />
                                 )}
                               </div>
-                              <span>{user.name || "Unnamed User"}</span>
+                              <span className="text-foreground">{user.name || "Unnamed User"}</span>
                             </div>
                           </TableCell>
-                          <TableCell>{user.email}</TableCell>
+                          <TableCell className="text-muted-foreground">{user.email}</TableCell>
                           <TableCell>
                             <Badge
                               className={
                                 user.role === "ADMIN"
-                                  ? "bg-green-800"
-                                  : "bg-gray-800"
+                                  ? "bg-[#0EA5E9]/15 text-[#0EA5E9] border border-[#0EA5E9]/30"
+                                  : "bg-muted text-muted-foreground border border-border"
                               }
                             >
                               {user.role}
@@ -405,7 +405,7 @@ export const SettingsForm = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="text-red-600"
+                                className="text-red-500 border-red-500/30 hover:bg-red-500/10"
                                 onClick={() => {
                                   setUserToDemote(user);
                                   setConfirmRemoveDialog(true);
@@ -437,11 +437,11 @@ export const SettingsForm = () => {
                 </div>
               ) : (
                 <div className="py-12 text-center">
-                  <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">
+                  <Users className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-1">
                     No users found
                   </h3>
-                  <p className="text-gray-500">
+                  <p className="text-muted-foreground">
                     {userSearch
                       ? "No users match your search criteria"
                       : "There are no users registered yet"}

@@ -6,19 +6,24 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 export async function getAdmin() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  try {
+    const { userId } = await auth();
+    if (!userId) return { authorized: false, reason: "unauthorized" };
 
-  const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
-  });
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
 
-  // If user not found in our db or not an admin, return not authorized
-  if (!user || user.role !== "ADMIN") {
-    return { authorized: false, reason: "not-admin" };
+    // If user not found in our db or not an admin, return not authorized
+    if (!user || user.role !== "ADMIN") {
+      return { authorized: false, reason: "not-admin" };
+    }
+
+    return { authorized: true, user };
+  } catch (error) {
+    console.error("getAdmin error:", error.message);
+    return { authorized: false, reason: error.message };
   }
-
-  return { authorized: true, user };
 }
 
 /**

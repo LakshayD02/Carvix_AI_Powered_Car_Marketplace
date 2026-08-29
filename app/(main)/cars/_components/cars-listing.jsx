@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, Car, SearchX, RotateCcw } from "lucide-react";
 import { CarCard } from "@/components/car-card";
 import useFetch from "@/hooks/use-fetch";
 import { getCars } from "@/actions/car-listing";
@@ -96,7 +96,7 @@ export function CarListings() {
   // Handle error
   if (error || (result && !result.success)) {
     return (
-      <Alert variant="destructive">
+      <Alert className="bg-red-500/10 border-red-500/30 text-red-400">
         <Info className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
@@ -116,17 +116,23 @@ export function CarListings() {
   // No results
   if (cars.length === 0) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center text-center p-8 border rounded-lg bg-gray-50">
-        <div className="bg-gray-100 p-4 rounded-full mb-4">
-          <Info className="h-8 w-8 text-gray-500" />
+      <div className="min-h-[400px] flex flex-col items-center justify-center text-center p-10 border border-border rounded-2xl glass-card bg-card/60 text-card-foreground">
+        <div className="p-4 rounded-full bg-[#0EA5E9]/10 text-[#0EA5E9] mb-4">
+          <SearchX className="h-10 w-10" />
         </div>
-        <h3 className="text-lg font-medium mb-2">No cars found</h3>
-        <p className="text-gray-500 mb-6 max-w-md">
-          We couldn't find any cars matching your search criteria. Try adjusting
-          your filters or search term.
+        <h3 className="text-xl font-bold text-foreground mb-2">No vehicles found</h3>
+        <p className="text-muted-foreground mb-6 max-w-md text-sm">
+          We couldn't find any vehicles matching your current search criteria. Try adjusting or clearing your filters.
         </p>
-        <Button variant="outline" asChild>
-          <Link href="/cars">Clear all filters</Link>
+        <Button
+          variant="outline"
+          className="border-border text-foreground hover:bg-muted rounded-xl gap-2"
+          asChild
+        >
+          <Link href="/cars">
+            <RotateCcw className="h-4 w-4 text-[#0EA5E9]" />
+            Reset all filters
+          </Link>
         </Button>
       </div>
     );
@@ -134,14 +140,9 @@ export function CarListings() {
 
   // Generate pagination items
   const paginationItems = [];
-
-  // Calculate which page numbers to show (first, last, and around current page)
   const visiblePageNumbers = [];
-
-  // Always show page 1
   visiblePageNumbers.push(1);
 
-  // Show pages around current page
   for (
     let i = Math.max(2, page - 1);
     i <= Math.min(pagination.pages - 1, page + 1);
@@ -150,24 +151,20 @@ export function CarListings() {
     visiblePageNumbers.push(i);
   }
 
-  // Always show last page if there's more than 1 page
   if (pagination.pages > 1) {
     visiblePageNumbers.push(pagination.pages);
   }
 
-  // Sort and deduplicate
   const uniquePageNumbers = [...new Set(visiblePageNumbers)].sort(
     (a, b) => a - b
   );
 
-  // Create pagination items with ellipses
   let lastPageNumber = 0;
   uniquePageNumbers.forEach((pageNumber) => {
     if (pageNumber - lastPageNumber > 1) {
-      // Add ellipsis
       paginationItems.push(
         <PaginationItem key={`ellipsis-${pageNumber}`}>
-          <PaginationEllipsis />
+          <PaginationEllipsis className="text-muted-foreground" />
         </PaginationItem>
       );
     }
@@ -177,6 +174,11 @@ export function CarListings() {
         <PaginationLink
           href={getPaginationUrl(pageNumber)}
           isActive={pageNumber === page}
+          className={
+            pageNumber === page
+              ? "bg-[#0EA5E9] text-white font-bold border-[#0EA5E9]"
+              : "text-muted-foreground hover:text-foreground border-border hover:bg-muted"
+          }
           onClick={(e) => {
             e.preventDefault();
             handlePageChange(pageNumber);
@@ -192,28 +194,28 @@ export function CarListings() {
 
   return (
     <div>
-      {/* Results count and current page */}
-      <div className="flex justify-between items-center mb-6">
-        <p className="text-gray-600">
+      {/* Results count header */}
+      <div className="flex justify-between items-center mb-6 pb-4 border-b border-border">
+        <p className="text-muted-foreground text-sm">
           Showing{" "}
-          <span className="font-medium">
+          <span className="font-semibold text-foreground">
             {(page - 1) * limit + 1}-{Math.min(page * limit, pagination.total)}
           </span>{" "}
-          of <span className="font-medium">{pagination.total}</span> cars
+          of <span className="font-semibold text-[#0EA5E9]">{pagination.total}</span> vehicles
         </p>
       </div>
 
-      {/* Car grid */}
+      {/* Car Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {cars.map((car) => (
           <CarCard key={car.id} car={car} />
         ))}
       </div>
 
-      {/* shadcn Pagination */}
+      {/* Pagination */}
       {pagination.pages > 1 && (
-        <Pagination className="mt-10">
-          <PaginationContent>
+        <Pagination className="mt-12">
+          <PaginationContent className="gap-2">
             <PaginationItem>
               <PaginationPrevious
                 href={getPaginationUrl(page - 1)}
@@ -223,7 +225,9 @@ export function CarListings() {
                     handlePageChange(page - 1);
                   }
                 }}
-                className={page <= 1 ? "pointer-events-none opacity-50" : ""}
+                className={`border-border text-muted-foreground hover:text-foreground ${
+                  page <= 1 ? "pointer-events-none opacity-40" : ""
+                }`}
               />
             </PaginationItem>
 
@@ -238,11 +242,9 @@ export function CarListings() {
                     handlePageChange(page + 1);
                   }
                 }}
-                className={
-                  page >= pagination.pages
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
+                className={`border-border text-muted-foreground hover:text-foreground ${
+                  page >= pagination.pages ? "pointer-events-none opacity-40" : ""
+                }`}
               />
             </PaginationItem>
           </PaginationContent>

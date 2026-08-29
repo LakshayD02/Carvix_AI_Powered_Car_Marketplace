@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Filter, X, Sliders } from "lucide-react";
+import { Filter, X, SlidersHorizontal, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,7 +27,6 @@ export const CarFilters = ({ filters }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get current filter values from searchParams
   const currentMake = searchParams.get("make") || "";
   const currentBodyType = searchParams.get("bodyType") || "";
   const currentFuelType = searchParams.get("fuelType") || "";
@@ -40,7 +39,6 @@ export const CarFilters = ({ filters }) => {
     : filters.priceRange.max;
   const currentSortBy = searchParams.get("sortBy") || "newest";
 
-  // Local state for filters
   const [make, setMake] = useState(currentMake);
   const [bodyType, setBodyType] = useState(currentBodyType);
   const [fuelType, setFuelType] = useState(currentFuelType);
@@ -52,7 +50,6 @@ export const CarFilters = ({ filters }) => {
   const [sortBy, setSortBy] = useState(currentSortBy);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  // Update local state when URL parameters change
   useEffect(() => {
     setMake(currentMake);
     setBodyType(currentBodyType);
@@ -70,7 +67,6 @@ export const CarFilters = ({ filters }) => {
     currentSortBy,
   ]);
 
-  // Count active filters
   const activeFilterCount = [
     make,
     bodyType,
@@ -80,7 +76,6 @@ export const CarFilters = ({ filters }) => {
       currentMaxPrice < filters.priceRange.max,
   ].filter(Boolean).length;
 
-  // Update URL when filters change
   const applyFilters = useCallback(() => {
     const params = new URLSearchParams();
 
@@ -94,7 +89,6 @@ export const CarFilters = ({ filters }) => {
       params.set("maxPrice", priceRange[1].toString());
     if (sortBy !== "newest") params.set("sortBy", sortBy);
 
-    // Preserve search and page params if they exist
     const search = searchParams.get("search");
     const page = searchParams.get("page");
     if (search) params.set("search", search);
@@ -118,7 +112,6 @@ export const CarFilters = ({ filters }) => {
     filters.priceRange.max,
   ]);
 
-  // Handle filter changes
   const handleFilterChange = (filterName, value) => {
     switch (filterName) {
       case "make":
@@ -139,12 +132,10 @@ export const CarFilters = ({ filters }) => {
     }
   };
 
-  // Handle clearing specific filter
   const handleClearFilter = (filterName) => {
     handleFilterChange(filterName, "");
   };
 
-  // Clear all filters
   const clearFilters = () => {
     setMake("");
     setBodyType("");
@@ -153,7 +144,6 @@ export const CarFilters = ({ filters }) => {
     setPriceRange([filters.priceRange.min, filters.priceRange.max]);
     setSortBy("newest");
 
-    // Keep search term if exists
     const params = new URLSearchParams();
     const search = searchParams.get("search");
     if (search) params.set("search", search);
@@ -165,7 +155,6 @@ export const CarFilters = ({ filters }) => {
     setIsSheetOpen(false);
   };
 
-  // Current filters object for the controls component
   const currentFilters = {
     make,
     bodyType,
@@ -177,103 +166,130 @@ export const CarFilters = ({ filters }) => {
   };
 
   return (
-    <div className="flex lg:flex-col justify-between gap-4">
-      {/* Mobile Filters */}
-      <div className="lg:hidden mb-4">
-        <div className="flex items-center">
-          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <Filter className="h-4 w-4" />
-                Filters
-                {activeFilterCount > 0 && (
-                  <Badge className="ml-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="w-full sm:max-w-md overflow-y-auto"
+    <div className="flex flex-col gap-4">
+      {/* Mobile Filter trigger + Sort Row */}
+      <div className="flex items-center justify-between gap-3 lg:hidden">
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 border-border bg-card text-foreground hover:bg-muted rounded-xl"
             >
-              <SheetHeader>
-                <SheetTitle>Filters</SheetTitle>
-              </SheetHeader>
+              <SlidersHorizontal className="h-4 w-4 text-[#0EA5E9]" />
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <Badge className="ml-1 bg-[#0EA5E9] text-white text-xs h-5 px-1.5 rounded-full">
+                  {activeFilterCount}
+                </Badge>
+              )}
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="left"
+            className="w-full sm:max-w-md bg-card border-r border-border text-card-foreground p-0 flex flex-col"
+          >
+            <SheetHeader className="p-6 border-b border-border text-left">
+              <SheetTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+                <SlidersHorizontal className="h-5 w-5 text-[#0EA5E9]" />
+                <span>Filter Inventory</span>
+              </SheetTitle>
+            </SheetHeader>
 
-              <div className="py-6">
-                <CarFilterControls
-                  filters={filters}
-                  currentFilters={currentFilters}
-                  onFilterChange={handleFilterChange}
-                  onClearFilter={handleClearFilter}
-                />
-              </div>
+            <div className="p-6 flex-1 overflow-y-auto">
+              <CarFilterControls
+                filters={filters}
+                currentFilters={currentFilters}
+                onFilterChange={handleFilterChange}
+                onClearFilter={handleClearFilter}
+              />
+            </div>
 
-              <SheetFooter className="sm:justify-between flex-row pt-2 border-t space-x-4 mt-auto">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={clearFilters}
-                  className="flex-1"
-                >
-                  Reset
-                </Button>
-                <Button type="button" onClick={applyFilters} className="flex-1">
-                  Show Results
-                </Button>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
-        </div>
+            <SheetFooter className="p-4 border-t border-border bg-muted/40 flex gap-3 flex-row">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={clearFilters}
+                className="flex-1 border-border text-muted-foreground hover:text-foreground rounded-xl"
+              >
+                Reset
+              </Button>
+              <Button
+                type="button"
+                onClick={applyFilters}
+                className="flex-1 bg-gradient-to-r from-[#0EA5E9] to-[#0284C7] text-white rounded-xl font-medium"
+              >
+                Apply Filters
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+
+        {/* Mobile Sort dropdown */}
+        <Select
+          value={sortBy}
+          onValueChange={(value) => {
+            setSortBy(value);
+            setTimeout(() => applyFilters(), 0);
+          }}
+        >
+          <SelectTrigger className="w-[170px] bg-card border-border text-foreground rounded-xl text-xs">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border text-card-foreground">
+            <SelectItem value="newest">Newest First</SelectItem>
+            <SelectItem value="priceAsc">Price: Low to High</SelectItem>
+            <SelectItem value="priceDesc">Price: High to Low</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <Select
-        value={sortBy}
-        onValueChange={(value) => {
-          setSortBy(value);
-          // Apply filters immediately when sort changes
-          setTimeout(() => applyFilters(), 0);
-        }}
-      >
-        <SelectTrigger className="w-[180px] lg:w-full">
-          <SelectValue placeholder="Sort by" />
-        </SelectTrigger>
-        <SelectContent>
-          {[
-            { value: "newest", label: "Newest First" },
-            { value: "priceAsc", label: "Price: Low to High" },
-            { value: "priceDesc", label: "Price: High to Low" },
-          ].map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      {/* Desktop Filters */}
+      {/* Desktop Filters Sidebar */}
       <div className="hidden lg:block sticky top-24">
-        <div className="border rounded-lg overflow-hidden bg-white">
-          <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
-            <h3 className="font-medium flex items-center">
-              <Sliders className="mr-2 h-4 w-4" />
-              Filters
+        <div className="glass-card overflow-hidden bg-card border border-border rounded-2xl shadow-xl transition-colors duration-300">
+          {/* Header */}
+          <div className="p-5 border-b border-border flex justify-between items-center bg-muted/30">
+            <h3 className="font-bold text-foreground flex items-center gap-2 text-base">
+              <SlidersHorizontal className="h-4 w-4 text-[#0EA5E9]" />
+              <span>Filters</span>
             </h3>
             {activeFilterCount > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 text-sm text-gray-600"
+                className="h-7 text-xs text-muted-foreground hover:text-[#0EA5E9] hover:bg-muted px-2 rounded-lg"
                 onClick={clearFilters}
               >
-                <X className="mr-1 h-3 w-3" />
-                Clear All
+                <RotateCcw className="mr-1 h-3 w-3" />
+                Clear
               </Button>
             )}
           </div>
 
-          <div className="p-4">
+          {/* Sort Dropdown */}
+          <div className="p-4 border-b border-border">
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 block">
+              Sort Order
+            </label>
+            <Select
+              value={sortBy}
+              onValueChange={(value) => {
+                setSortBy(value);
+                setTimeout(() => applyFilters(), 0);
+              }}
+            >
+              <SelectTrigger className="w-full bg-background border-border text-foreground rounded-xl text-sm">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border text-card-foreground">
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="priceAsc">Price: Low to High</SelectItem>
+                <SelectItem value="priceDesc">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filter Controls Body */}
+          <div className="p-5 max-h-[calc(100vh-280px)] overflow-y-auto">
             <CarFilterControls
               filters={filters}
               currentFilters={currentFilters}
@@ -282,8 +298,12 @@ export const CarFilters = ({ filters }) => {
             />
           </div>
 
-          <div className="px-4 py-4 border-t">
-            <Button onClick={applyFilters} className="w-full">
+          {/* Apply Action */}
+          <div className="p-4 border-t border-border bg-muted/30">
+            <Button
+              onClick={applyFilters}
+              className="w-full bg-gradient-to-r from-[#0EA5E9] to-[#0284C7] text-white font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] transition-all"
+            >
               Apply Filters
             </Button>
           </div>

@@ -19,8 +19,8 @@ export default async function ReservationsPage() {
   const reservationsResult = await getUserTestDrives();
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-6xl mb-6 gradient-title">Your Reservations</h1>
+    <div className="container mx-auto px-4 pt-4 sm:pt-6 pb-12">
+      <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 gradient-title">Your Reservations</h1>
       <ReservationsList initialData={reservationsResult} />
     </div>
   );

@@ -319,11 +319,11 @@ export const CarsList = () => {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-              <CarIcon className="h-12 w-12 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-1">
+              <CarIcon className="h-12 w-12 text-muted-foreground/40 mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-1">
                 No cars found
               </h3>
-              <p className="text-gray-500 mb-4">
+              <p className="text-muted-foreground mb-4">
                 {search
                   ? "No cars match your search criteria"
                   : "Your inventory is empty. Add cars to get started."}

@@ -17,7 +17,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// Helper function to format time
 const formatTime = (timeString) => {
   try {
     return format(parseISO(`2022-01-01T${timeString}`), "h:mm a");
@@ -26,21 +25,20 @@ const formatTime = (timeString) => {
   }
 };
 
-// Helper function for status badge
 const getStatusBadge = (status) => {
   switch (status) {
     case "PENDING":
-      return <Badge className="bg-amber-100 text-amber-800">Pending</Badge>;
+      return <Badge className="bg-amber-500/15 text-amber-500 border border-amber-500/30 font-semibold">Pending</Badge>;
     case "CONFIRMED":
-      return <Badge className="bg-green-100 text-green-800">Confirmed</Badge>;
+      return <Badge className="bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 font-semibold">Confirmed</Badge>;
     case "COMPLETED":
-      return <Badge className="bg-blue-100 text-blue-800">Completed</Badge>;
+      return <Badge className="bg-[#0EA5E9]/15 text-[#0EA5E9] border border-[#0EA5E9]/30 font-semibold">Completed</Badge>;
     case "CANCELLED":
-      return <Badge className="bg-gray-100 text-gray-800">Cancelled</Badge>;
+      return <Badge className="bg-gray-500/15 text-muted-foreground border border-border font-semibold">Cancelled</Badge>;
     case "NO_SHOW":
-      return <Badge className="bg-red-100 text-red-800">No Show</Badge>;
+      return <Badge className="bg-red-500/15 text-red-500 border border-red-500/30 font-semibold">No Show</Badge>;
     default:
-      return <Badge variant="outline">{status}</Badge>;
+      return <Badge variant="outline" className="border-border text-foreground">{status}</Badge>;
   }
 };
 
@@ -55,10 +53,8 @@ export function TestDriveCard({
 }) {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
-  // Handle cancel
   const handleCancel = async () => {
     if (!onCancel) return;
-
     await onCancel(booking.id);
     setCancelDialogOpen(false);
   };
@@ -66,13 +62,13 @@ export function TestDriveCard({
   return (
     <>
       <Card
-        className={`overflow-hidden ${
-          isPast ? "opacity-80 hover:opacity-100 transition-opacity" : ""
+        className={`glass-card overflow-hidden border-border bg-card text-card-foreground shadow-sm transition-colors duration-300 ${
+          isPast ? "opacity-75 hover:opacity-100 transition-opacity" : ""
         }`}
       >
         <div className="flex flex-col sm:flex-row">
           {/* Car Image - Left */}
-          <div className="sm:w-1/4 relative h-40 sm:h-auto">
+          <div className="sm:w-1/3 relative h-48 sm:h-auto bg-muted">
             {booking.car.images && booking.car.images.length > 0 ? (
               <div className="relative w-full h-full">
                 <Image
@@ -83,40 +79,39 @@ export function TestDriveCard({
                 />
               </div>
             ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <Car className="h-12 w-12 text-gray-400" />
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <Car className="h-12 w-12 text-muted-foreground/40" />
               </div>
             )}
-            <div className="absolute top-2 right-2 sm:hidden">
+            <div className="absolute top-3 right-3 sm:hidden">
               {getStatusBadge(booking.status)}
             </div>
           </div>
 
           {/* Booking Details - Middle */}
-          <div className="p-4 sm:w-1/2 sm:flex-1">
+          <div className="p-5 sm:w-1/2 sm:flex-1">
             <div className="hidden sm:block mb-2">
               {getStatusBadge(booking.status)}
             </div>
 
-            <h3 className="text-lg font-bold mb-1">
-              {booking.car.year} {booking.car.make} {booking.car.model}{" "}
+            <h3 className="text-xl font-bold text-foreground mb-1">
+              {booking.car.year} {booking.car.make} {booking.car.model}
             </h3>
             {renderStatusSelector()}
 
-            <div className="space-y-2 my-2">
-              <div className="flex items-center text-gray-600">
-                <Calendar className="h-4 w-4 mr-2" />
+            <div className="space-y-2 my-3 text-sm text-muted-foreground">
+              <div className="flex items-center">
+                <Calendar className="h-4 w-4 mr-2 text-[#0EA5E9]" />
                 {format(new Date(booking.bookingDate), "EEEE, MMMM d, yyyy")}
               </div>
-              <div className="flex items-center text-gray-600">
-                <Clock className="h-4 w-4 mr-2" />
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-2 text-[#0EA5E9]" />
                 {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
               </div>
 
-              {/* Show customer info in admin view */}
               {isAdmin && booking.user && (
-                <div className="flex items-center text-gray-600">
-                  <User className="h-4 w-4 mr-2" />
+                <div className="flex items-center">
+                  <User className="h-4 w-4 mr-2 text-[#0EA5E9]" />
                   {booking.user.name || booking.user.email}
                 </div>
               )}
@@ -125,27 +120,26 @@ export function TestDriveCard({
 
           {/* Action Buttons - Right */}
           {showActions && (
-            <div className="p-4 border-t sm:border-t-0 sm:border-l sm:w-1/4 sm:flex sm:flex-col sm:justify-center sm:items-center sm:space-y-2">
-              {/* Show notes if any */}
+            <div className="p-5 border-t sm:border-t-0 sm:border-l border-border sm:w-1/3 sm:flex sm:flex-col sm:justify-center sm:items-center sm:space-y-3 bg-muted/20">
               {booking.notes && (
-                <div className="bg-gray-50 p-2 rounded text-sm w-full">
-                  <p className="font-medium">Notes:</p>
-                  <p className="text-gray-600">{booking.notes}</p>
+                <div className="bg-muted p-3 rounded-xl border border-border text-xs w-full mb-2">
+                  <p className="font-semibold text-[#0EA5E9]">Notes:</p>
+                  <p className="text-muted-foreground mt-0.5">{booking.notes}</p>
                 </div>
               )}
 
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full my-2 sm:mb-0"
+                className="w-full border-border text-foreground hover:bg-muted rounded-xl text-xs font-semibold"
                 asChild
               >
                 <Link
                   href={`/cars/${booking.carId}`}
-                  className="flex items-center justify-center"
+                  className="flex items-center justify-center gap-1.5"
                 >
-                  View Car
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <span>View Car</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </Button>
               {(booking.status === "PENDING" ||
@@ -153,14 +147,14 @@ export function TestDriveCard({
                 <Button
                   variant="destructive"
                   size="sm"
-                  className="w-full"
+                  className="w-full rounded-xl text-xs font-semibold bg-red-500/15 text-red-500 hover:bg-red-500/25 border border-red-500/30"
                   onClick={() => setCancelDialogOpen(true)}
                   disabled={isCancelling}
                 >
                   {isCancelling ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    "Cancel"
+                    "Cancel Reservation"
                   )}
                 </Button>
               )}
@@ -172,21 +166,22 @@ export function TestDriveCard({
       {/* Cancel Confirmation Dialog */}
       {onCancel && (
         <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
-          <DialogContent>
+          <DialogContent className="bg-card border border-border text-card-foreground sm:max-w-md rounded-2xl">
             <DialogHeader>
-              <DialogTitle>Cancel Test Drive</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-xl font-bold text-foreground">Cancel Test Drive</DialogTitle>
+              <DialogDescription className="text-muted-foreground text-sm">
                 Are you sure you want to cancel your test drive for the{" "}
-                {booking.car.year} {booking.car.make} {booking.car.model}? This
-                action cannot be undone.
+                <span className="text-[#0EA5E9] font-semibold">
+                  {booking.car.year} {booking.car.make} {booking.car.model}
+                </span>?
               </DialogDescription>
             </DialogHeader>
 
             <div className="py-4">
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm bg-muted/40 p-4 rounded-xl border border-border">
                 <div className="flex justify-between">
-                  <span className="font-medium">Date:</span>
-                  <span>
+                  <span className="text-muted-foreground">Date:</span>
+                  <span className="font-semibold text-foreground">
                     {format(
                       new Date(booking.bookingDate),
                       "EEEE, MMMM d, yyyy"
@@ -194,8 +189,8 @@ export function TestDriveCard({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">Time:</span>
-                  <span>
+                  <span className="text-muted-foreground">Time:</span>
+                  <span className="font-semibold text-foreground">
                     {formatTime(booking.startTime)} -{" "}
                     {formatTime(booking.endTime)}
                   </span>
@@ -203,11 +198,12 @@ export function TestDriveCard({
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 variant="outline"
                 onClick={() => setCancelDialogOpen(false)}
                 disabled={isCancelling}
+                className="border-border text-foreground hover:bg-muted rounded-xl"
               >
                 Keep Reservation
               </Button>
@@ -215,6 +211,7 @@ export function TestDriveCard({
                 variant="destructive"
                 onClick={handleCancel}
                 disabled={isCancelling}
+                className="bg-red-500 text-white hover:bg-red-600 rounded-xl"
               >
                 {isCancelling ? (
                   <>
@@ -222,7 +219,7 @@ export function TestDriveCard({
                     Cancelling...
                   </>
                 ) : (
-                  "Cancel Reservation"
+                  "Confirm Cancel"
                 )}
               </Button>
             </DialogFooter>
