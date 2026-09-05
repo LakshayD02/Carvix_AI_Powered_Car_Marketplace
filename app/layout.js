@@ -15,14 +15,14 @@ const outfit = Outfit({
 
 export const metadata = {
   title: {
-    default: "Carvix AI — Find Your Dream Car",
+    default: "Carvix AI | Lakshay",
     template: "%s | Carvix AI",
   },
   description:
     "AI-powered car marketplace. Buy, rent, and discover thousands of verified vehicles with intelligent search, seamless test drive booking, and transparent pricing.",
   keywords: ["car marketplace", "buy car", "rent car", "AI car search", "test drive", "dealership"],
   openGraph: {
-    title: "Carvix AI — Find Your Dream Car",
+    title: "Carvix AI - Find Your Dream Car",
     description: "AI-powered car marketplace with thousands of verified vehicles.",
     type: "website",
   },
@@ -134,7 +134,7 @@ export default function RootLayout({ children }) {
                 {/* Bottom bar */}
                 <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
                   <p className="text-muted-foreground text-xs">
-                    © {new Date().getFullYear()} Carvix AI. All rights reserved. Built with ❤️
+                    © {new Date().getFullYear()} Carvix AI. All rights reserved. Developed by Lakshay Dhoundiyal
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
