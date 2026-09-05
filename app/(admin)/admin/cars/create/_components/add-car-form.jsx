@@ -656,7 +656,7 @@ export const AddCarForm = () => {
             <CardHeader>
               <CardTitle>AI-Powered Car Details Extraction</CardTitle>
               <CardDescription>
-                Upload an image of a car and let Gemini AI extract its details.
+                Upload an image of a car and let our AI extract its details.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -724,7 +724,7 @@ export const AddCarForm = () => {
                     <div>
                       <p className="font-medium">Analyzing image...</p>
                       <p className="text-sm">
-                        Gemini AI is extracting car details
+                        Our AI is extracting car details
                       </p>
                     </div>
                   </div>
